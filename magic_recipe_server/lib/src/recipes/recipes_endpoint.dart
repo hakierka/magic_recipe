@@ -1,10 +1,11 @@
 
 import 'package:google_generative_ai/google_generative_ai.dart';
+import 'package:magic_recipe_server/src/generated/protocol.dart';
 import 'package:serverpod/serverpod.dart';
 
 class RecipesEndpoint extends Endpoint {   
 
-  Future<String> generateRecipe(Session session, String ingredients) async {
+  Future<Recipe> generateRecipe(Session session, String ingredients) async {
     final geminiApiKey = session.passwords['gemini'];
     if (geminiApiKey == null) {
       throw Exception('Gemini API key not found');
@@ -21,15 +22,32 @@ class RecipesEndpoint extends Endpoint {
     final response = await gemini.generateContent([Content.text(prompt)]);
 
     final responseText = response.text;
-    
+
     if (responseText == null || responseText.isEmpty) {
       throw Exception('No response from Gemini API');
     }
+    final recipe = Recipe(
+      author: 'Gemini',
+      text: responseText,
+      date: DateTime.now(),
+      ingredients: ingredients,
+    );
 
-    return responseText;
+    final recipeWithId = await Recipe.db.insertRow(session, recipe);
+
+    return recipeWithId;
 
 
 
   }
-  
+
+    Future<List<Recipe>> getRecipes(Session session) async {
+    // Get all the recipes from the database, sorted by date.
+      return Recipe.db.find(
+        session,
+        orderBy: (t) => t.date,
+        orderDescending: true,
+      );
+  }
 }
+  
