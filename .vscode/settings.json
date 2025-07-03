@@ -5,10 +5,10 @@
             "server": "localhost",
             "port": 8090,
             "driver": "PostgreSQL",
-            "password": "jB8DEE5MCIWS2Wte2btjZeo0no2XeRBY",
             "name": "magic_recipe",
             "database": "magic_recipe",
-            "username": "postgres"
+            "username": "postgres",
+            "password": "jB8DEE5MCIWS2Wte2btjZeo0no2XeRBY"
         }
     ]
 }
