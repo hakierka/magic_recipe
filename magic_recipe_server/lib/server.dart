@@ -2,6 +2,8 @@ import 'package:magic_recipe_server/src/birthday_reminder.dart';
 import 'package:serverpod/serverpod.dart';
 
 import 'package:magic_recipe_server/src/web/routes/root.dart';
+import 'package:serverpod_auth_server/module.dart' as auth;
+
 
 import 'src/generated/protocol.dart';
 import 'src/generated/endpoints.dart';
