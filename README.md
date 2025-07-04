@@ -1,4 +1,4 @@
-# ✨ Magic Recipe: Your Serverpod Academy Final Project! ✨
+# ✨ Magic Recipe: Serverpod Academy Final Project! ✨
 
 ## From the Desk of a Serverpod Developer Advocate
 
