@@ -18,6 +18,8 @@ var generateContent =
 
 
 class RecipesEndpoint extends Endpoint {   
+  @override
+  bool get requireLogin => true;
 
   Future<Recipe> generateRecipe(Session session, String ingredients) async {
     final geminiApiKey = session.passwords['gemini'];
@@ -35,11 +37,14 @@ class RecipesEndpoint extends Endpoint {
     if (responseText == null || responseText.isEmpty) {
       throw Exception('No response from Gemini API');
     }
+
+    final userId = (await session.authenticated)?.userId;
     final recipe = Recipe(
       author: 'Gemini',
       text: responseText,
       date: DateTime.now(),
       ingredients: ingredients,
+      userId: userId,
     );
 
     final recipeWithId = await Recipe.db.insertRow(session, recipe);
@@ -51,20 +56,20 @@ class RecipesEndpoint extends Endpoint {
   }
 
     Future<List<Recipe>> getRecipes(Session session) async {
+      final userId = (await session.authenticated)?.userId;
     // Get all the recipes from the database, sorted by date.
-    return Recipe.db.find(
-      session,
+    return Recipe.db.find(session,
+      where: (t) => t.deletedAt.equals(null) & t.userId.equals(userId),
       orderBy: (t) => t.date,
-      // filter out the deleted recipes
-      where: (t) => t.deletedAt.equals(null),
       orderDescending: true,
     );
   }
 
   Future<void> deleteRecipe(Session session, int recipeId) async {
+      final userId = (await session.authenticated)?.userId;
     // Find the recipe in the database
     final recipe = await Recipe.db.findById(session, recipeId);
-    if (recipe == null) {
+    if (recipe == null || recipe.userId != userId) {
       throw Exception('Recipe not found');
     }
     // Delete the recipe from the database

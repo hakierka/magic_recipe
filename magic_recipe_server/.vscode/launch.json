@@ -1,0 +1,16 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Serverpod Tests (Fix Connection)",
+            "request": "launch",
+            "type": "dart",
+            "program": "test/integration/recipes_endpoint_test.dart",
+            "env": {
+                "SERVERPOD_TEST_HOST": "127.0.0.1",
+                "SERVERPOD_TEST_PORT": "9090",
+                "SERVERPOD_TEST_PASSWORD": "jB8DEE5MCIWS2Wte2btjZeo0no2XeRBY" // <--- ADD THIS LINE
+            }
+        }
+    ]
+}
