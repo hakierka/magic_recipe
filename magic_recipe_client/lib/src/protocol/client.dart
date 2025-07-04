@@ -88,11 +88,17 @@ class EndpointRecipes extends _i1.EndpointRef {
   @override
   String get name => 'recipes';
 
-  _i2.Future<_i5.Recipe> generateRecipe(String ingredients) =>
+  _i2.Future<_i5.Recipe> generateRecipe(
+    String ingredients, [
+    String? imagePath,
+  ]) =>
       caller.callServerEndpoint<_i5.Recipe>(
         'recipes',
         'generateRecipe',
-        {'ingredients': ingredients},
+        {
+          'ingredients': ingredients,
+          'imagePath': imagePath,
+        },
       );
 
   _i2.Future<List<_i5.Recipe>> getRecipes() =>
@@ -107,6 +113,26 @@ class EndpointRecipes extends _i1.EndpointRef {
         'recipes',
         'deleteRecipe',
         {'recipeId': recipeId},
+      );
+
+  _i2.Future<(String?, String)> getUploadDescription(String filename) =>
+      caller.callServerEndpoint<(String?, String)>(
+        'recipes',
+        'getUploadDescription',
+        {'filename': filename},
+      );
+
+  _i2.Future<bool> verifyUpload(String path) => caller.callServerEndpoint<bool>(
+        'recipes',
+        'verifyUpload',
+        {'path': path},
+      );
+
+  _i2.Future<String> getPublicUrlForPath(String path) =>
+      caller.callServerEndpoint<String>(
+        'recipes',
+        'getPublicUrlForPath',
+        {'path': path},
       );
 }
 

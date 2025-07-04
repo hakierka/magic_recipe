@@ -4,6 +4,9 @@ import 'package:serverpod_auth_email_flutter/serverpod_auth_email_flutter.dart';
 import 'package:serverpod_auth_shared_flutter/serverpod_auth_shared_flutter.dart';
 import 'package:serverpod_flutter/serverpod_flutter.dart';
 import 'package:magic_recipe_flutter/admin_dashboard.dart';
+import 'package:magic_recipe_flutter/image_widgets.dart';
+
+
 /// Sets up a global client object that can be used to talk to the server from
 /// anywhere in our app. The client is generated from your server code
 /// and is set up to connect to a Serverpod running on a local server on
@@ -106,6 +109,8 @@ class MyHomePageState extends State<MyHomePage> {
   String? _errorMessage;
 
   final _textEditingController = TextEditingController();
+  String? _imagePath;
+
 
   bool _loading = false;
 
@@ -116,8 +121,8 @@ class MyHomePageState extends State<MyHomePage> {
         _recipe = null;
         _loading = true;
       });
-      final result =
-          await client.recipes.generateRecipe(_textEditingController.text);
+      final result = await client.recipes
+          .generateRecipe(_textEditingController.text, _imagePath);
       setState(() {
         _errorMessage = null;
         _recipe = result;
@@ -195,9 +200,11 @@ class MyHomePageState extends State<MyHomePage> {
                         recipe.text.substring(0, recipe.text.indexOf('\n'))),
                     subtitle: Text('${recipe.author} - ${recipe.date}'),
                     onTap: () {
-                      // Show the recipe in the text field
-                      _textEditingController.text = recipe.ingredients;
+
                       setState(() {
+                        _errorMessage = null;
+                        _textEditingController.text = recipe.ingredients;
+                        _imagePath = recipe.imagePath;                        
                         _recipe = recipe;
                       });
                     },
@@ -235,11 +242,25 @@ class MyHomePageState extends State<MyHomePage> {
                   ),
                   Padding(
                     padding: const EdgeInsets.only(bottom: 16.0),
-                    child: ElevatedButton(
-                      onPressed: _loading ? null : _callGenerateRecipe,
-                      child: _loading
-                          ? const Text('Loading...')
-                          : const Text('Send to Server'),
+                    child: Row(
+                      spacing: 16,
+                      children: [
+                        ElevatedButton(
+                          onPressed: _loading ? null : _callGenerateRecipe,
+                          child: _loading
+                              ? const Text('Loading...')
+                              : const Text('Send to Server'),
+                        ),
+                        ImageUploadButton(
+                          key: ValueKey(_imagePath),
+                          onImagePathChanged: (imagePath) {
+                            setState(() {
+                              _imagePath = imagePath;
+                            });
+                          },
+                          imagePath: _imagePath,
+                        ),
+                      ],
                     ),
                   ),
                   Expanded(

@@ -85,6 +85,7 @@ a detailed recipe. Only put the title in the first line, no markup.'''));
       text: responseText,
       date: DateTime.now(),
       ingredients: ingredients,
+      imagePath: imagePath,
     );
     
     await session.caches.local
