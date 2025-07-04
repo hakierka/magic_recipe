@@ -16,3 +16,4 @@ fields:
   ### If the recipe was deleted, we store the date it was deleted
   deletedAt: DateTime?, scope=serverOnly
   userId: int?, scope=serverOnly
+  imagePath: String?

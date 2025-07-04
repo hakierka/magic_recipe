@@ -28,7 +28,8 @@ class RecipesEndpoint extends Endpoint {
       throw Exception('Gemini API key not found');
     }
     
-    final cacheKey = 'recipe-${ingredients.hashCode}';
+    final cacheKey = 'recipe-${ingredients.hashCode}-$imagePath';
+
     final cachedRecipe = await session.caches.local.get<Recipe>(cacheKey);
     if (cachedRecipe != null) {
       final userId = (await session.authenticated)?.userId;
